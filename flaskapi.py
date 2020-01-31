@@ -4,12 +4,14 @@ from flask import request
 from flask_pymongo import PyMongo
 import pymongo
 from pymongo import MongoClient
+
+
 client = MongoClient('mongodb://localhost:27017/')
-db = client.camera    
+db = client.camera    #change to ur database name
 
 app = Flask(__name__)
 
-app.config['MONGO_DBNAME'] = 'camera'
+app.config['MONGO_DBNAME'] = 'camera' #change to ur database name
 app.config['MONGO_URI'] = 'mongodb://localhost:27017/camera'
 
 mongo = PyMongo(app)
@@ -18,7 +20,7 @@ mongo = PyMongo(app)
 def get_all_stars():
 
   output = []
-  for s in db.cone.find():
+  for s in db.cone.find(): #change to ur collection name
     output.append({'name' : s['name'], 'age' : s['age']})
   return jsonify({'result':True,"response" : output})
 
@@ -38,7 +40,7 @@ def get_one_age():
 	if request.method == 'GET':
 		jsonobject=request.json
 		ag=jsonobject['age']
-		for s in db.cone.find():
+		for s in db.cone.find():#change to ur collection name
 			if(s['age']==ag):
 				output.append({'name' : s['name'], 'age' : s['age']})
 		return jsonify({'result':True,'response' : output})
@@ -49,10 +51,10 @@ def add_std():
 	jsonobject=request.json
 	nam = jsonobject['name']
 	ag = jsonobject['age']
-	if(db.cone.find_one({'name': nam, 'age': ag})):
+	if(db.cone.find_one({'name': nam, 'age': ag})):#change to ur collection name
 		return jsonify({'result' : False,"response:":"Failed -- Person already exists --"})
 	else:
-		db.cone.insert_one({'name': nam, 'age': ag})
+		db.cone.insert_one({'name': nam, 'age': ag})#change to ur collection name
 		return jsonify({'result' : True,"response:": " Record Added"})
 @app.route('/upd', methods=['PUT'])
 def upd_std():
@@ -60,8 +62,8 @@ def upd_std():
 	nam = jsonobject['name']
 	ag = jsonobject['age']
 	
-	db.cone.find_one_and_update({'name': nam},{'$set': {"age":ag}}, upsert=True)
-	ss=db.cone.find_one({'name': nam})
+	db.cone.find_one_and_update({'name': nam},{'$set': {"age":ag}}, upsert=True)#change to ur collection name
+	ss=db.cone.find_one({'name': nam})#change to ur collection name
 	return jsonify({'result' : True,'response': " --Updated --","record ":str(ss)})
 	
 
@@ -75,15 +77,15 @@ def del_std():
 	jsonobject=request.json
 	nam = jsonobject['name']
 	ag = jsonobject['age']
-	j=db.cone.find_one({'name': nam})
-	v=db.cone.find_one({'age': ag})
+	j=db.cone.find_one({'name': nam})#change to ur collection name
+	v=db.cone.find_one({'age': ag})#change to ur collection name
 	ss=str(j)
 	vv=str(v)
 	if(j):
-		db.cone.delete_one({'name': nam})
+		db.cone.delete_one({'name': nam})#change to ur collection name
 		return jsonify({'result' : True,'response': " -- Record Deleted --","Record":ss})
 	elif(v):
-		db.cone.delete_one({'age': ag})
+		db.cone.delete_one({'age': ag})#change to ur collection name
 		return jsonify({'result' : True,'response': " -- Record Deleted --","Record":vv})
 
 	else:
